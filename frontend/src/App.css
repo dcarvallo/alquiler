@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+*{
+  box-sizing: border-box;
+}
+
+.tarjeta{
+  height: 250px;
+  border-radius: 15px;
+  border-top: 6px solid orange;
+  box-shadow: 8px 8px 10px rgb(0 0 0 / .3);
+}
+
+.imagen{
+  max-height: 230px;
+}

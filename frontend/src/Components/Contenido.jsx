@@ -66,13 +66,13 @@ const Contenido = () => {
         </div>
       </div>
       
-      <div className='grid grid-cols-12 container mx-auto gap-2'>
-        <div className="col-span-2 text-center">
+      <div className='grid  grid-cols-12 container mx-auto gap-2'>
+        <div className="col-span-2 col-start-2 text-center border rounded border-stone-400" >
           <SideBar filtro={filtro} setFiltro={setFiltro} />
         </div>
       
-        <div className='col-span-9 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 '>
-        { vehiculos.map(vehiculo => (
+        <div className='col-span-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 '>
+        { vehiculos.length>0 ? vehiculos.map(vehiculo => (
 
             <div key={vehiculo.id} className="tarjeta pt-2 relative shadow-slate-300 shadow-xl rounded-2xl border-t-4 border-t-orange-400">
               
@@ -94,24 +94,25 @@ const Contenido = () => {
                 </div>
             </div>
           ))
-
+          : <p>No hay coindidencias</p>
         }
         </div>
       </div>
       <hr className='h-8 mt-8'/>
       <div className='w-full mx-auto'>
-
+        {pageCount > 0 ?
         <ReactPaginate
-          previousLabel="Atras"
-          nextLabel="Siguiente"
-          pageCount={pageCount}
-          onPageChange={changePage}
-          containerClassName={"paginationBttns"}
-          previousLinkClassName={"previousBttn"}
-          nextLinkClassName={"nextBttn"}
-          disabledClassName={"paginationDisabled"}
-          activeClassName={"paginationActive"}
+        previousLabel="Atras"
+        nextLabel="Siguiente"
+        pageCount={pageCount}
+        onPageChange={changePage}
+        containerClassName={"paginationBttns"}
+        previousLinkClassName={"previousBttn"}
+        nextLinkClassName={"nextBttn"}
+        disabledClassName={"paginationDisabled"}
+        activeClassName={"paginationActive"}
         />
+      : null }
       </div>
     </div>
   )

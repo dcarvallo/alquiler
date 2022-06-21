@@ -9,7 +9,7 @@ const AutoSchema = new mongoose.Schema({
     },
     rentPrice: {
         type: Number,
-        required: true
+        // required: true
     },
     make: {
         type: String,
@@ -19,9 +19,9 @@ const AutoSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    horsepower: {
+    horsePower: {
         type: Number,
-        required: true
+        // required: true
     },
     img_url: {
       type: String,
@@ -29,12 +29,12 @@ const AutoSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum:['Pequeño', 'Mediano', 'Grande', "Minivan"]
+        // enum:['Small', 'Medium', 'Large', "Minivan"]
     },
     type: {
         type: String,
         required: true,
-        enum:['Mecanica', 'Automatica']
+        // enum:['Mecanic', 'Automatic']
     },
     stock: {
         type: Number,
@@ -54,5 +54,5 @@ const AutoSchema = new mongoose.Schema({
 });
 
 AutoSchema.plugin(mongoosePaginate);
-const Auto = mongoose.model('Auto', AutoSchema);
+const Auto = mongoose.model('Car', AutoSchema);
 module.exports = Auto;

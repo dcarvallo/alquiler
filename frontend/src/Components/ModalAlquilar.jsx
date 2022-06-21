@@ -7,7 +7,7 @@ const ModalAlquilar = ({showModal, setShowModal, showId}) => {
 
   useEffect(() => {
     // setShowModal(true)
-      axios.get('http://localhost:4000/auto/'+showId)
+      axios.get('https://alquiler-backend.vercel.app/auto/'+showId)
       // axios.get('https://notas-app2.herokuapp.com/filters'+showId)
       .then(res => setVehiculo(res.data.auto))
       .catch(console.log())

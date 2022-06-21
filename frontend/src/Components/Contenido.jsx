@@ -39,7 +39,7 @@ const Contenido = () => {
     }
 
     const cargarVehiculos = () => { 
-      axios.get('http://localhost:4000/auto',{
+      axios.get('https://alquiler-backend.vercel.app/auto',{
       // axios.get('https://notas-app2.herokuapp.com/autos',{
         params:{
           filter: { 

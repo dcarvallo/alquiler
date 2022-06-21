@@ -26,7 +26,7 @@ const CreateForm = () => {
 
   const create = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:4000/auto',data)
+    axios.post('https://alquiler-backend.vercel.app/auto',data)
     .then(res => {
       setData(initialData)
       toast.success('Success...',{

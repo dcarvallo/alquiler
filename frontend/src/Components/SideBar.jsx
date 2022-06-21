@@ -22,7 +22,7 @@ const SideBar = (props) => {
   }, []);
 
   const cargarFiltros = () => { 
-    axios.get('http://localhost:4000/filters')
+    axios.get('https://alquiler-backend.vercel.app/filters')
     // axios.get('https://notas-app2.herokuapp.com/filters')
     .then((res)=>{
       console.log(res.data)

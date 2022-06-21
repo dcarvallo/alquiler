@@ -4,15 +4,18 @@ import axios from 'axios'
 import ModalAlquilar from './ModalAlquilar'
 import ReactPaginate from 'react-paginate';
 import SideBar from './SideBar';
+import {Link} from 'react-router-dom'
 
 const Contenido = () => {
     const [vehiculos,setVehiculos]=useState([])
     const [buscar, setBuscar] = useState("");
-    const [filtro, setFiltro] = useState({buscar: "", categoria: 'Mediano'});
+    const [filtro, setFiltro] = useState({buscar: "", categoria: 'Medium'});
     const [searchResults, setSearchResults] = useState([]);
     const [totalCount,setTotalCount] = useState(0);
     const [pageNumber,setPageNumber] = useState(1);
     const [pageSize,setPageSize] = useState(9);
+    const [showModal, setShowModal] = useState(false);
+    const [showId,setShowId] = useState('')
 
 
     const handleChange = event => {
@@ -30,12 +33,18 @@ const Contenido = () => {
       }
     }
 
+    const showData = (id) => {
+      setShowModal(true)
+      setShowId(id)
+    }
+
     const cargarVehiculos = () => { 
       axios.get('http://localhost:4000/auto',{
+      // axios.get('https://notas-app2.herokuapp.com/autos',{
         params:{
           filter: { 
             'buscar': filtro.buscar,
-            'categoria': filtro.categoria
+            'category': filtro.categoria
           },
           page: pageNumber, 
           perPage: pageSize,
@@ -53,20 +62,25 @@ const Contenido = () => {
     useEffect(() => {
       
       cargarVehiculos();
-      console.log(filtro)
     }, [filtro,pageNumber])
     
   return (
     <div>
-      <div className="flex justify-center pt-5">
-        <div className="mb-3 xl:w-96">
-          <div className="input-group relative flex items-stretch w-full mb-4">
+      <div className="flex mb-3 justify-center pt-5 items-center">
+        <div className=" xl:w-96">
             <input value={filtro.buscar} onChange={handleChange} onKeyPress={metodoBuscar} type="search" className="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Buscar marca de vehiculo" aria-label="buscar" aria-describedby="button-addon3"/>
-          </div>
+        </div>
+        <div className='ml-2'>
+
+        <Link to='/createForm'>
+          <a className='p-2 bg-blue-500 text-white rounded' href="">
+            Crear auto
+            </a> 
+            </Link>
         </div>
       </div>
       
-      <div className='grid  grid-cols-12 container mx-auto gap-2'>
+      <div className='grid grid-cols-12 container mx-auto gap-2'>
         <div className="col-span-2 col-start-2 text-center border rounded border-stone-400" >
           <SideBar filtro={filtro} setFiltro={setFiltro} />
         </div>
@@ -74,7 +88,7 @@ const Contenido = () => {
         <div className='col-span-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 '>
         { vehiculos.length>0 ? vehiculos.map(vehiculo => (
 
-            <div key={vehiculo.id} className="tarjeta pt-2 relative shadow-slate-300 shadow-xl rounded-2xl border-t-4 border-t-orange-400">
+            <div key={vehiculo._id} className="tarjeta pt-2 relative shadow-slate-300 shadow-xl rounded-2xl border-t-4 border-t-orange-400">
               
               <div className='flex flex-row space-x-1  absolute'>
 
@@ -82,15 +96,12 @@ const Contenido = () => {
                 <div className='md:text-left sm:basis-2/5'>
                   <p><strong>Marca:</strong> {vehiculo.make}</p>
                   <p><strong>Modelo:</strong> {vehiculo.model}</p>
-                  {/* <p><strong>Año:</strong> {vehiculo.year}</p> */}
-                  <p><strong>Caballo fuerza:</strong> {vehiculo.horsepower}</p>
-                  <p><strong>Precio: </strong>{vehiculo.price}</p>
-                  <p><strong>Capacidad: </strong>{vehiculo.capacity} asientos</p>
+                  <p><strong>Categoria:</strong> {vehiculo.category}</p>
 
                 </div>
               </div>
                 <div className='absolute bottom-5 right-5'>
-                  <ModalAlquilar vehiculo={vehiculo}/>
+                  <button className='bg-blue-500 text-white p-1 rounded' onClick={() => showData(vehiculo._id)}>Select</button>
                 </div>
             </div>
           ))
@@ -114,6 +125,7 @@ const Contenido = () => {
         />
       : null }
       </div>
+      {showModal && <ModalAlquilar showId={showId} showModal={showModal} setShowModal={setShowModal} />}
     </div>
   )
 }

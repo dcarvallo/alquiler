@@ -1,9 +1,12 @@
+require('dotenv').config();
+
 const express = require('express')
 const Database = require('./config/database');
 const CONFIG = require('./config/config')
 const bodyParser = require('body-parser');
-var cors = require('cors');
 
+
+var cors = require('cors');
 const app = express()
 const port = 4000
 

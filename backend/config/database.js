@@ -7,7 +7,7 @@ module.exports = {
         if (this.connection) return this.connection;
         return mongoose.connect(CONFIG.DB, {useUnifiedTopology: true,useNewUrlParser: true}).then(connection => {
             this.connection = connection;
-            console.log('Conexion a DB exitosa');
+            console.log('Conexion a DB exitosa',CONFIG.DB);
         }).catch(err => console.log(err))
     }
 }

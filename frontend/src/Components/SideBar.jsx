@@ -1,45 +1,59 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
+const marks = {
+  200: <strong>$200</strong>,
+  600: <strong>$600</strong>,
+  
+};
 
 const SideBar = (props) => {
 
   const [category,setCategory] = useState([])
   const [priceRange,setPriceRange] = useState([])
 
-  const [categorySel, setCategorySel] = useState("Mediano")
+  const [categorySel, setCategorySel] = useState("Medium")
   
   useEffect(()=>{
-    const cargarFiltros = () => { 
-      axios.get('http://localhost:4000/filters')
-      .then((res)=>{
-        setCategory(res.data.category)
-        setPriceRange(res.data.priceRange)   
-        
-      })
-      .catch((err)=>{
-        console.log(err)
-      })
+   
       cargarFiltros();
-    }}, []);
+  }, []);
+
+  const cargarFiltros = () => { 
+    axios.get('http://localhost:4000/filters')
+    // axios.get('https://notas-app2.herokuapp.com/filters')
+    .then((res)=>{
+      console.log(res.data)
+      setCategory(res.data.category)
+      setPriceRange(res.data.priceRange)   
+      
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
 
   const selcat = (cat) => {
     props.setFiltro({...props.filtro, categoria: cat})
     setCategorySel(cat)
     // console.log(props.filtro)
   }
-  const handleMin = (e)=> {
+  const sliderFunc = (e)=> {
+    // console.log(props)
     console.log('test', e)
   }
 
   return (
       <>
-        <p className='underline font-bold my-4'>Filtros </p>
+        <h4 className='underline font-bold my-4'>Filtros </h4>
       <div className='flex flex-col flex-wrap items-center'>
         { category.map((fil)=>(
-          <div key={fil.tamanio} onClick={() => {selcat(fil.tamanio)} } className={`w-24 bg-white rounded-lg shadow-md p-2 hover:cursor-pointer mb-3 ${categorySel === fil.tamanio ? 'bg-blue-200' : ''}`}>
-            <div className='flex justify-between mb-2'>
-              <h3 className='text-xs tracking-wide text-blue-900 '>{fil.tamanio}</h3>
-              { categorySel === fil.tamanio ? 
+          <div key={fil} onClick={() => {selcat(fil)} } className={`w-24 bg-white rounded-lg shadow-md p-2 hover:cursor-pointer mb-3 ${categorySel === fil ? 'bg-blue-200' : ''}`}>
+            <div className='flex justify-between'>
+              <h3 className='text-xs tracking-wide text-blue-900 '>{fil}</h3>
+              { categorySel === fil ? 
               
                 <svg className="w-4 h-4" width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                   <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -65,17 +79,11 @@ const SideBar = (props) => {
           ))
         }
         <hr />
-        <input
-        onChange={handleMin}
-          type="range"
-          class="
-            range-min absolute w-full -top-1 bg-transparent appearance-none pointer-events-none
-          "
-          min="0"
-          max="5"
-          step="0.5"
-          id="customRange3"
-        />
+        
+        <h4 className='underline font-bold my-4'>Price </h4>
+        <Slider onChange={sliderFunc} style={{width: '80%'}} range marks={marks} min={priceRange[0]} max={priceRange[1]} step='50' 
+        pushable
+        draggableTrack defaultValue={[300,500]} />
         <div>
 
         </div>

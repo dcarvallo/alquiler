@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', autoController.listall)
       .post('/', autoController.create)
-      .get('/:key/:value', autoController.find, autoController.show)
+      .get('/:id', autoController.find, autoController.show)
       .put('/:key/:value', autoController.find, autoController.update)
       .delete('/:key/:value', autoController.find, autoController.deleted)
 

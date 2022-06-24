@@ -6,6 +6,8 @@ import ReactPaginate from 'react-paginate';
 import SideBar from './SideBar';
 import {Link} from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast';
+import LoadingCard from './LoadingCard';
+import ReactImageAppear from 'react-image-appear';
 
 const url = process.env.REACT_APP_API + "/auto"
 
@@ -20,6 +22,7 @@ const Contenido = () => {
     const [showModal, setShowModal] = useState(false);
     const [showId,setShowId] = useState('')
     const [loading, setLoading] = useState(false)
+    const [loadingImage, setLoadingImage] = useState({id: false })
 
 
     const handleChange = event => {
@@ -77,6 +80,11 @@ const Contenido = () => {
       })
       setShowModal(false)
     }
+    function onLoad(index){
+      if (index === vehiculos.length - 1) {
+        console.log("loaded");
+      }
+    }
     
   return (
     <div>
@@ -108,14 +116,30 @@ const Contenido = () => {
 
             <div key={vehiculo._id} className="tarjeta pt-2 relative shadow-slate-300 shadow-xl rounded-2xl border-t-4 border-t-orange-400">
               
-              <div className='flex flex-row space-x-1  absolute'>
-
-                <img className='mx-2 h-44 ml-0 flex-auto sm:w-full basis-3/5 object-cover overflow-hidden rounded-tl-2xl rounded-bl-2xl imagen' src={vehiculo.img_url} alt="" />
-                <div className='md:text-left sm:basis-2/5'>
-                  <p><strong>Marca:</strong> {vehiculo.make}</p>
-                  <p><strong>Modelo:</strong> {vehiculo.model}</p>
-                  <p><strong>Categoria:</strong> {vehiculo.category}</p>
-
+              <div className='grid grid-cols-2 px-1 gap-1'>
+                <ReactImageAppear 
+                  src={vehiculo.img_url}
+                  animation="blurInRight"
+                  animationDuration="1.2s"
+                  
+              />
+                <div className='md:text-left sm:basis-2/5 text-center'>
+                  <div className='text-center'>
+                    <span className='text-xs text-gray-400 text-center'>Marca</span> 
+                    <hr />
+                  <p>{vehiculo.make}</p>
+                  </div>
+                  <div className='text-center'>
+                    <span className='text-xs text-gray-400 text-center'>Modelo</span> 
+                    <hr />
+                  <p>{vehiculo.model}</p>
+                  </div>
+                  <div className='text-center'>
+                    <span className='text-xs text-gray-400 text-center'>Categoria</span> 
+                    <hr />
+                  <p> {vehiculo.category}</p>
+                  </div>
+                
                 </div>
               </div>
                 <div className='absolute bottom-5 right-5'>

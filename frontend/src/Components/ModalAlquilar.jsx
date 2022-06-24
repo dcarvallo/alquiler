@@ -105,7 +105,7 @@ const ModalAlquilar = ({showModal, mensajeReservar,setShowModal, showId}) => {
                 <div className='text-left'>
                   <h2 className='text-lg font-bold'>Hacer reservacion</h2>
                 <form action="" className='my-4 border-2 rounded p-3'>
-                <div className='grid grid-cols-1 sm:grid-cols-2'>
+                <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
                   <div>
                     <label className='block'>
                           Nombre
@@ -113,6 +113,7 @@ const ModalAlquilar = ({showModal, mensajeReservar,setShowModal, showId}) => {
                     
                     <input type="text" className="
                       mt-1
+                      w-full
                       rounded-md
                       border-gray-300
                       shadow-sm
@@ -125,6 +126,7 @@ const ModalAlquilar = ({showModal, mensajeReservar,setShowModal, showId}) => {
                       </label>
                     <input type="text" className="
                       mt-1
+                      w-full
                       rounded-md
                       border-gray-300
                       shadow-sm
@@ -132,18 +134,18 @@ const ModalAlquilar = ({showModal, mensajeReservar,setShowModal, showId}) => {
                       " placeholder="Documento Identidad" required value={ci} onChange={e => setCi(e.target.value)}/>
                   </div>
                   </div>
-                  <div className='grid grid-cols-1 sm:grid-cols-2'>
+                  <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                   <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" >
                       From (date)
                     </label>
-                    <input min={new Date().toISOString().split("T")[0]} required className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date" type="date"  placeholder="date" value={dateFrom}  onChange={changeDataFrom} />
+                    <input min={new Date().toISOString().split("T")[0]} required className="shadow w-full appearance-none  rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date" type="date"  placeholder="date" value={dateFrom}  onChange={changeDataFrom} />
                   </div>
                   <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" >
                       To (date)
                     </label>
-                    <input min={new Date().toISOString().split("T")[0]} required className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date" type="date"  placeholder="date" value={dateTo} onChange={changeDataTo}/>
+                    <input min={new Date().toISOString().split("T")[0]} required className="shadow w-full appearance-none rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date" type="date"  placeholder="date" value={dateTo} onChange={changeDataTo}/>
                     {errorTo && <p className='text-red-400'>{errorTo}</p>}
                   </div>
                   </div>

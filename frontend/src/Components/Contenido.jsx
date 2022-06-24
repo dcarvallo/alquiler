@@ -19,6 +19,7 @@ const Contenido = () => {
     const [pageSize,setPageSize] = useState(9);
     const [showModal, setShowModal] = useState(false);
     const [showId,setShowId] = useState('')
+    const [loading, setLoading] = useState(false)
 
 
     const handleChange = event => {
@@ -42,7 +43,7 @@ const Contenido = () => {
     }
 
     const cargarVehiculos = () => { 
-      
+      setLoading(true)
       axios.get(url,{
       // axios.get('https://alquiler-backend.vercel.app/auto',{
       // axios.get('https://notas-app2.herokuapp.com/autos',{
@@ -61,6 +62,7 @@ const Contenido = () => {
         setTotalCount(res.data.total)
 
         setVehiculos(res.data.docs)
+        setLoading(false)
       })
     }
 
@@ -84,7 +86,7 @@ const Contenido = () => {
     />
       <div className="flex mb-3 justify-center pt-5 items-center">
         <div className=" xl:w-96">
-            <input value={filtro.buscar} onChange={handleChange} onKeyPress={metodoBuscar} type="search" className="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Buscar marca de vehiculo" aria-label="buscar" aria-describedby="button-addon3"/>
+            <input value={filtro.buscar} onChange={handleChange} onKeyPress={metodoBuscar} type="search" className="form-control flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Buscar marca de vehiculo" aria-label="buscar" aria-describedby="button-addon3"/>
         </div>
         <div className='ml-2'>
 
@@ -96,13 +98,13 @@ const Contenido = () => {
         </div>
       </div>
       
-      <div className='grid grid-cols-12 container mx-auto gap-2'>
-        <div className="col-span-2 col-start-2 text-center border rounded border-stone-400" >
-          <SideBar filtro={filtro} setFiltro={setFiltro} />
+      <div className='px-6 grid grid-cols-1 sm:grid-cols-12 container mx-auto gap-2'>
+        <div className="sm:col-start-1 sm:col-end-3 text-center border rounded border-stone-400 mb-8 pb-6" >
+          { loading ? <p>...</p> : <SideBar filtro={filtro} setFiltro={setFiltro} /> }
         </div>
       
-        <div className='col-span-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 '>
-        { vehiculos.length>0 ? vehiculos.map(vehiculo => (
+        <div className='sm:col-start-3 sm:col-end-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 '>
+        { vehiculos.length > 0 ? vehiculos.map(vehiculo => (
 
             <div key={vehiculo._id} className="tarjeta pt-2 relative shadow-slate-300 shadow-xl rounded-2xl border-t-4 border-t-orange-400">
               
@@ -121,7 +123,7 @@ const Contenido = () => {
                 </div>
             </div>
           ))
-          : <p>No hay coindidencias</p>
+          : loading ? <p>Cargando...</p> :<p>No hay coincidencias</p>
         }
         </div>
       </div>

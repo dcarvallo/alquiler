@@ -1,53 +1,73 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import axios from 'axios'
+import 'react-responsive-modal/styles.css';
+import { Modal } from 'react-responsive-modal';
 
-const ModalAlquilar = ({showModal, setShowModal, showId}) => {
-    
+const ModalAlquilar = ({showModal, mensajeReservar,setShowModal, showId}) => {
+  
   const [vehiculo, setVehiculo] = useState({})  
+  const [reserved, setReserved] = useState([])
+  const [name,setName] = useState('')
+  const [ci,setCi] = useState('')
+  const [dateFrom,setDateFrom] = useState('')
+  const [dateTo,setDateTo] = useState('')
+  const [errorTo,setErrorTo] = useState('')
+  const url = process.env.REACT_APP_API;
 
   useEffect(() => {
-    // setShowModal(true)
-      axios.get('https://alquiler-backend.vercel.app/auto/'+showId)
-      // axios.get('https://notas-app2.herokuapp.com/filters'+showId)
-      .then(res => setVehiculo(res.data.auto))
-      .catch(console.log())
+      axios.get(url +"/auto/"+showId)
+      .then(res => {
+        setVehiculo(res.data.auto)
+        setReserved(res.data.reserved)
+      } 
+      )
+      .catch(err => console.log(err))
 
   },[])
+
+  function reserve(e){
+    e.preventDefault()
+    axios.post(url + "/reserve", {
+      name,ci,dateFrom,dateTo,carId:vehiculo._id
+    }).then(res => {
+      mensajeReservar()
+      
+  }
+    )
+    .catch(err => console.log(err))
+    
+  }
+
+  function changeDataFrom(e){
+    setDateFrom(e.target.value)
+    setDateTo(e.target.value)
+  }
+
+  function changeDataTo(e){
+    if(e.target.value < dateFrom || e.target.value < new Date().toISOString().split("T")[0] ){
+      setErrorTo('Fecha invalida')
+      console.log('fecha invalida',new Date().toISOString().split("T")[0])
+    }
+    else{
+      setDateTo(e.target.value)
+      setErrorTo('')
+    }
+  }
 
   return (
     <>
     
     {showModal ? (
-      <>
-        <div
-          className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-10 z-50 outline-none focus:outline-none"
-        >
-          <div className="relative w-auto my-6 mx-auto max-w-6xl">
-          
-            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-              
-              {/* <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                <h3 className="text-3xl font-semibold">
-                  {vehiculo.make}
-                </h3>
-                <button
-                  className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                  onClick={() => setShowModal(false)}
-                >
-                  <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                    ×
-                  </span>
-                </button>
-              </div> */}
-              <div className="relative p-6">
-                <div className='text-center'>
-                  <img className='mx-auto  pt-5 h-2/4' width={'100%'} src={vehiculo.img_url} alt="" />
-                </div>
-                <div className='text-left'>
-
+      <Modal open={showModal} onClose={setShowModal} showCloseIcon={false} center>
+       
+              <div className="p-6">
                 <h4 className='text-xl font-bold my-4'>{vehiculo.name}</h4>
-                
-                <div className='grid grid-cols-4 gap-4'>
+                <div className='grid grid-cols-1 sm:grid-cols-2'>
+                <div className='text-center'>
+                  <img className='mx-auto h-60' src={vehiculo.img_url} alt="" />
+                </div>
+                                
+                <div className='grid grid-cols-1 sm:grid-cols-3 '>
                   <div>
                     <h4 className='border-b-2 font-bold'>Make</h4>
                     <p>{vehiculo.make}</p>
@@ -73,8 +93,19 @@ const ModalAlquilar = ({showModal, setShowModal, showId}) => {
                     <p>{vehiculo.capacity}</p>
                   </div>
                 </div>
+                  <div className='my-6'>
+                    <h4 className='border-b-2 font-bold'>Reservas vigentes</h4>
+                    <ul className='list-disc list-inside'>
+                      {reserved.length && reserved.map(res => (
+                        <li key={res._id}>{res.dateFrom.slice(0,10).replaceAll('-','/')} - {res.dateTo.slice(0,10).replaceAll('-','/')}</li>
+                        ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className='text-left'>
+                  <h2 className='text-lg font-bold'>Hacer reservacion</h2>
                 <form action="" className='my-4 border-2 rounded p-3'>
-                <div className='flex justify-around gap-4'>
+                <div className='grid grid-cols-1 sm:grid-cols-2'>
                   <div>
                     <label className='block'>
                           Nombre
@@ -82,13 +113,11 @@ const ModalAlquilar = ({showModal, setShowModal, showId}) => {
                     
                     <input type="text" className="
                       mt-1
-                      block
-                      w-96
                       rounded-md
                       border-gray-300
                       shadow-sm
                       focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
-                      " placeholder="Nombre completo" />
+                      " placeholder="Nombre completo" value={name} required onChange={e => setName(e.target.value)}/>
                   </div>
                   <div>
                     <label className='block'>
@@ -96,27 +125,26 @@ const ModalAlquilar = ({showModal, setShowModal, showId}) => {
                       </label>
                     <input type="text" className="
                       mt-1
-                      block
-                      w-96
                       rounded-md
                       border-gray-300
                       shadow-sm
                       focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
-                      " placeholder="Documento Identidad" />
+                      " placeholder="Documento Identidad" required value={ci} onChange={e => setCi(e.target.value)}/>
                   </div>
                   </div>
-                  <div className='flex justify-around'>
+                  <div className='grid grid-cols-1 sm:grid-cols-2'>
                   <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" >
                       From (date)
                     </label>
-                    <input required className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date" type="date"  placeholder="date" />
+                    <input min={new Date().toISOString().split("T")[0]} required className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date" type="date"  placeholder="date" value={dateFrom}  onChange={changeDataFrom} />
                   </div>
                   <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" >
                       To (date)
                     </label>
-                    <input required className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date" type="date"  placeholder="date" />
+                    <input min={new Date().toISOString().split("T")[0]} required className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date" type="date"  placeholder="date" value={dateTo} onChange={changeDataTo}/>
+                    {errorTo && <p className='text-red-400'>{errorTo}</p>}
                   </div>
                   </div>
                 </form>
@@ -134,16 +162,12 @@ const ModalAlquilar = ({showModal, setShowModal, showId}) => {
                 <button
                   className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="button"
-                  onClick={() => setShowModal(false)}
+                  onClick={reserve}
                 >
                   Reservar
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-        <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-      </>
+      </Modal>
     ) : null}
   </>
   )

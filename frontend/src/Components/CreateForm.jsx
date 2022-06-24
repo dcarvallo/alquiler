@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 const initialData = {
   name:'',
@@ -26,7 +26,7 @@ const CreateForm = () => {
 
   const create = (e) => {
     e.preventDefault();
-    axios.post('https://alquiler-backend.vercel.app/auto',data)
+    axios.post(`${process.env.REACT_APP_API}/auto`,data)
     .then(res => {
       setData(initialData)
       toast.success('Success...',{

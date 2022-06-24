@@ -22,7 +22,8 @@ const SideBar = (props) => {
   }, []);
 
   const cargarFiltros = () => { 
-    axios.get('https://alquiler-backend.vercel.app/filters')
+    const url = process.env.REACT_APP_API + "/filters"
+    axios.get(url)
     // axios.get('https://notas-app2.herokuapp.com/filters')
     .then((res)=>{
       console.log(res.data)

@@ -5,6 +5,9 @@ import ModalAlquilar from './ModalAlquilar'
 import ReactPaginate from 'react-paginate';
 import SideBar from './SideBar';
 import {Link} from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast';
+
+const url = process.env.REACT_APP_API + "/auto"
 
 const Contenido = () => {
     const [vehiculos,setVehiculos]=useState([])
@@ -39,7 +42,9 @@ const Contenido = () => {
     }
 
     const cargarVehiculos = () => { 
-      axios.get('https://alquiler-backend.vercel.app/auto',{
+      
+      axios.get(url,{
+      // axios.get('https://alquiler-backend.vercel.app/auto',{
       // axios.get('https://notas-app2.herokuapp.com/autos',{
         params:{
           filter: { 
@@ -63,9 +68,20 @@ const Contenido = () => {
       
       cargarVehiculos();
     }, [filtro,pageNumber])
+
+    function mensajeReservar(){
+      toast.success('Success...',{
+        className:'bg-green-400 text-white'
+      })
+      setShowModal(false)
+    }
     
   return (
     <div>
+      <Toaster
+      position="top-right"
+      reverseOrder={false}
+    />
       <div className="flex mb-3 justify-center pt-5 items-center">
         <div className=" xl:w-96">
             <input value={filtro.buscar} onChange={handleChange} onKeyPress={metodoBuscar} type="search" className="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Buscar marca de vehiculo" aria-label="buscar" aria-describedby="button-addon3"/>
@@ -73,9 +89,9 @@ const Contenido = () => {
         <div className='ml-2'>
 
         <Link to='/createForm'>
-          <a className='p-2 bg-blue-500 text-white rounded' href="">
+          <p className='p-2 bg-blue-500 text-white rounded'>
             Crear auto
-            </a> 
+            </p> 
             </Link>
         </div>
       </div>
@@ -125,7 +141,7 @@ const Contenido = () => {
         />
       : null }
       </div>
-      {showModal && <ModalAlquilar showId={showId} showModal={showModal} setShowModal={setShowModal} />}
+      {showModal && <ModalAlquilar mensajeReservar={mensajeReservar} showId={showId} showModal={showModal} setShowModal={setShowModal} />}
     </div>
   )
 }

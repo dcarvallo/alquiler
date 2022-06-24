@@ -1,9 +1,21 @@
-const Auto = require('../models/Autos');
 const Reserve = require('../models/Reservations');
-const {faker} = require("@faker-js/faker");
+const Auto = require('../models/Autos');
+
+async function reserve(req, res){
+    if(req.body.error) return res.status(500).send({error});
+    console.log('this is it?')
+    // const rese = await Reverve.find(req.body.id)
+    const auto = await Auto.findById(req.body.id)
+    let reserve = new Reserve(req.body);
+    reserve.save()
+    console.log(auto)
+    // console.log(rese)
+    return res.status(200).send({reserve});
+}
+
 
 async function listall(req, res) {
-    
+    // console.log(req.query)
     const {page, perPage, filter} = req.query;
     const options = {
         page: parseInt(page, 10) || 1,
@@ -51,11 +63,11 @@ async function show(req, res) {
     if(req.body.error) return res.status(500).send({error});
     if(!req.body.autos) return res.status(404).send({message: 'Not Found'});
     // let autos = req.body.autos;
-    const reserved = await Reserve.find({carId:req.params.id ,reserved: true})
+
 
     const auto = await Auto.findById(req.params.id)
     console.log(auto)
-    return res.status(200).send({auto,reserved});
+    return res.status(200).send({auto});
 }
 
 function update(req, res) {
@@ -91,7 +103,10 @@ function find(req, res, next){
     })
 }
 
+
+
 module.exports = {
+    reserve,
     listall,
     show,
     create,

@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <div className='max-w-7xl mx-auto'>
+      <div className='max-w-2xl md:max-w-7xl mx-auto'>
 
       <Routes>
         <Route path="/" element={<Contenido />} />

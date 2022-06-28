@@ -12,6 +12,7 @@ const url = process.env.REACT_APP_API + "/auto"
 
 const Contenido = () => {
     const [vehiculos,setVehiculos]=useState([])
+    const [filVehiculos, setFilVehiculos] = useState([])
     const [buscar, setBuscar] = useState("");
     const [filtro, setFiltro] = useState({buscar: "", categoria: 'Medium'});
     const [searchResults, setSearchResults] = useState([]);
@@ -59,7 +60,7 @@ const Contenido = () => {
       })
       .then((res)=>{
         setTotalCount(res.data.total)
-
+        setFilVehiculos(res.data.docs)
         setVehiculos(res.data.docs)
         setLoading(false)
       })
@@ -102,15 +103,15 @@ const Contenido = () => {
         </div>
       </div>
       
-      <div className='px-6 grid grid-cols-1 sm:grid-cols-12 container mx-auto gap-2'>
-        <div className="sm:col-start-1 sm:col-end-3 text-center border rounded border-stone-400 mb-8 pb-6" >
+      <div className=' grid grid-cols-1 sm:grid-cols-12 justify-center container mx-auto gap-2'>
+        <div className="justify-center sm:col-start-1 sm:col-end-3 text-center border rounded border-stone-400 mb-8 pb-6" >
           {/* { loading ? <p>...</p> :  */}
-          <SideBar filtro={filtro} setFiltro={setFiltro} /> 
+          <SideBar setFilVehiculos={setFilVehiculos} vehiculos={vehiculos} filVehiculos={filVehiculos} filtro={filtro} setFiltro={setFiltro} /> 
           {/* } */}
         </div>
       
-        <div className='sm:col-start-3 sm:col-end-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 '>
-        { vehiculos.length > 0 ? vehiculos.map(vehiculo => (
+        <div className='justify-center sm:col-start-3 sm:col-end-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 '>
+        { filVehiculos.length > 0 ? filVehiculos.map(vehiculo => (
 
             <div key={vehiculo._id} className="tarjeta pt-2 relative shadow-slate-300 shadow-xl rounded-2xl border-t-4 border-t-orange-400">
               
@@ -137,6 +138,11 @@ const Contenido = () => {
                     <span className='text-xs text-gray-400 text-center'>Categoria</span> 
                     <hr />
                   <p> {vehiculo.category}</p>
+                  </div>
+                  <div className='text-center'>
+                    <span className='text-xs text-gray-400 text-center'>Rent Price</span> 
+                    <hr />
+                  <p> {vehiculo.rentPrice}</p>
                   </div>
                 
                 </div>

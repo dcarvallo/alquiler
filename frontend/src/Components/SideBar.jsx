@@ -17,6 +17,7 @@ const SideBar = (props) => {
   const [loading, setLoading] = useState(false)
   const [categorySel, setCategorySel] = useState("Medium")
   
+  
   useEffect(()=>{
    
       cargarFiltros();
@@ -42,7 +43,9 @@ const SideBar = (props) => {
     props.setFiltro({...props.filtro, categoria: cat})
   }
   const sliderFunc = (e)=> {
-    console.log('test', e)
+    const data = props.vehiculos.filter( ve => ve.rentPrice >= e[0] && ve.rentPrice <= e[1]) 
+    console.log('test', data)
+    props.setFilVehiculos(data)
   }
   function percentFormatter(v) {
     return `${v} %`;
@@ -86,7 +89,7 @@ const SideBar = (props) => {
         <h4 className='underline font-bold my-4'>Price range</h4>
         <RangeSlider onChange={sliderFunc} style={{width: '80%'}} range marks={marks} min={priceRange[0]} max={priceRange[1]} step='50' 
         pushable
-        draggableTrack defaultValue={[300,500]} 
+        draggableTrack  defaultValue={[300,500]} 
         tipFormatter={percentFormatter}
         />
         <div>

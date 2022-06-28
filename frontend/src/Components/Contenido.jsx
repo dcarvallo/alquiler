@@ -6,7 +6,6 @@ import ReactPaginate from 'react-paginate';
 import SideBar from './SideBar';
 import {Link} from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast';
-import LoadingCard from './LoadingCard';
 import ReactImageAppear from 'react-image-appear';
 
 const url = process.env.REACT_APP_API + "/auto"
@@ -48,8 +47,6 @@ const Contenido = () => {
     const cargarVehiculos = () => { 
       setLoading(true)
       axios.get(url,{
-      // axios.get('https://alquiler-backend.vercel.app/auto',{
-      // axios.get('https://notas-app2.herokuapp.com/autos',{
         params:{
           filter: { 
             'buscar': filtro.buscar,
@@ -61,7 +58,6 @@ const Contenido = () => {
         }
       })
       .then((res)=>{
-        // console.log('sefsefsef',res)
         setTotalCount(res.data.total)
 
         setVehiculos(res.data.docs)
@@ -108,7 +104,9 @@ const Contenido = () => {
       
       <div className='px-6 grid grid-cols-1 sm:grid-cols-12 container mx-auto gap-2'>
         <div className="sm:col-start-1 sm:col-end-3 text-center border rounded border-stone-400 mb-8 pb-6" >
-          { loading ? <p>...</p> : <SideBar filtro={filtro} setFiltro={setFiltro} /> }
+          {/* { loading ? <p>...</p> :  */}
+          <SideBar filtro={filtro} setFiltro={setFiltro} /> 
+          {/* } */}
         </div>
       
         <div className='sm:col-start-3 sm:col-end-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 '>
@@ -121,6 +119,7 @@ const Contenido = () => {
                   src={vehiculo.img_url}
                   animation="blurInRight"
                   animationDuration="1.2s"
+                  alt="Car image"
                   
               />
                 <div className='md:text-left sm:basis-2/5 text-center'>

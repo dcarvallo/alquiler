@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
-import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+
+import {useState, useEffect} from 'react';
+import axios from 'axios';
+import RangeSlider from 'rc-slider';
 
 const marks = {
   200: <strong>$200</strong>,
@@ -13,7 +14,7 @@ const SideBar = (props) => {
 
   const [category,setCategory] = useState([])
   const [priceRange,setPriceRange] = useState([])
-
+  const [loading, setLoading] = useState(false)
   const [categorySel, setCategorySel] = useState("Medium")
   
   useEffect(()=>{
@@ -22,14 +23,14 @@ const SideBar = (props) => {
   }, []);
 
   const cargarFiltros = () => { 
+    setLoading(true)
     const url = process.env.REACT_APP_API + "/filters"
     axios.get(url)
-    // axios.get('https://notas-app2.herokuapp.com/filters')
     .then((res)=>{
       console.log(res.data)
       setCategory(res.data.category)
       setPriceRange(res.data.priceRange)   
-      
+      setLoading(false)
     })
     .catch((err)=>{
       console.log(err)
@@ -37,20 +38,21 @@ const SideBar = (props) => {
   }
 
   const selcat = (cat) => {
-    props.setFiltro({...props.filtro, categoria: cat})
     setCategorySel(cat)
-    // console.log(props.filtro)
+    props.setFiltro({...props.filtro, categoria: cat})
   }
   const sliderFunc = (e)=> {
-    // console.log(props)
     console.log('test', e)
+  }
+  function percentFormatter(v) {
+    return `${v} %`;
   }
 
   return (
       <>
         <h4 className='underline font-bold my-4'>Filtros </h4>
       <div className='flex flex-col flex-wrap items-center'>
-        { category.map((fil)=>(
+        { loading ? <p>...</p> : category.map((fil)=>(
           <div key={fil} onClick={() => {selcat(fil)} } className={`w-24 bg-white rounded-lg shadow-md p-2 hover:cursor-pointer mb-3 ${categorySel === fil ? 'bg-blue-200' : ''}`}>
             <div className='flex justify-between'>
               <h3 className='text-xs tracking-wide text-blue-900 '>{fil}</h3>
@@ -81,10 +83,12 @@ const SideBar = (props) => {
         }
         <hr />
         
-        <h4 className='underline font-bold my-4'>Price </h4>
-        <Slider onChange={sliderFunc} style={{width: '80%'}} range marks={marks} min={priceRange[0]} max={priceRange[1]} step='50' 
+        <h4 className='underline font-bold my-4'>Price range</h4>
+        <RangeSlider onChange={sliderFunc} style={{width: '80%'}} range marks={marks} min={priceRange[0]} max={priceRange[1]} step='50' 
         pushable
-        draggableTrack defaultValue={[300,500]} />
+        draggableTrack defaultValue={[300,500]} 
+        tipFormatter={percentFormatter}
+        />
         <div>
 
         </div>

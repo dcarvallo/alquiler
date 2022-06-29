@@ -2,18 +2,10 @@ import 'rc-slider/assets/index.css';
 
 import {useState, useEffect} from 'react';
 import axios from 'axios';
-import RangeSlider from 'rc-slider';
-
-const marks = {
-  200: <strong>$200</strong>,
-  600: <strong>$600</strong>,
-  
-};
 
 const SideBar = (props) => {
 
   const [category,setCategory] = useState([])
-  const [priceRange,setPriceRange] = useState([])
   const [loading, setLoading] = useState(false)
   const [categorySel, setCategorySel] = useState("Medium")
   
@@ -30,7 +22,7 @@ const SideBar = (props) => {
     .then((res)=>{
       console.log(res.data)
       setCategory(res.data.category)
-      setPriceRange(res.data.priceRange)   
+      // setPriceRange(res.data.priceRange)   
       setLoading(false)
     })
     .catch((err)=>{
@@ -43,9 +35,13 @@ const SideBar = (props) => {
     props.setFiltro({...props.filtro, categoria: cat})
   }
   const sliderFunc = (e)=> {
-    const data = props.vehiculos.filter( ve => ve.rentPrice >= e[0] && ve.rentPrice <= e[1]) 
-    console.log('test', data)
-    props.setFilVehiculos(data)
+    // if(props.pages > 1){
+      props.setFiltro({...props.filtro, rangePrice: e});
+    // }
+    // else {
+      // const data = props.vehiculos.filter( ve => ve.rangePrice >= e[0] && ve.rangePrice <= e[1]) 
+      // props.setFilVehiculos(data)
+    // } 
   }
   function percentFormatter(v) {
     return `${v} %`;
@@ -86,12 +82,69 @@ const SideBar = (props) => {
         }
         <hr />
         
-        <h4 className='underline font-bold my-4'>Price range</h4>
-        <RangeSlider onChange={sliderFunc} style={{width: '80%'}} range marks={marks} min={priceRange[0]} max={priceRange[1]} step='50' 
+        <h4 className='underline font-bold my-4'>Rango Precio</h4>
+
+        <div  className="flex flex-col items-start">
+          <div className='flex justify-start'>
+          
+          <input
+            name='price'
+            value={1}
+            type="radio"
+            id='300'
+            
+            onChange={() => props.setFiltro({...props.filtro, rangePrice: 0})}
+            className="h-4 w-4 border-gray-300 rounded-full text-blue-600 focus:ring-blue-500"
+            />
+          <label
+            htmlFor='300'
+            className="ml-3 cursor-pointer text-sm text-gray-600"
+            >
+            Menor que 300
+          </label>
+            </div >
+            <div  className='flex  justify-start'>
+
+          <input
+            name='price'
+            value={2}
+            type="radio"
+            id='500'
+            defaultChecked
+            onChange={() => props.setFiltro({...props.filtro, rangePrice: 1})}
+            className="h-4 w-4 border-gray-300 rounded-full text-blue-600 focus:ring-blue-500"
+          />
+          <label
+            htmlFor='500'
+            className="ml-3 cursor-pointer text-sm text-gray-600"
+            >
+            entre 300 y 500
+          </label>
+          </div>
+          <div  className='flex justify-start'>
+
+          <input
+            name='price'
+            value={3}
+            type="radio"
+            id='600'
+            onChange={() => props.setFiltro({...props.filtro, rangePrice: 2})}
+            className="h-4 w-4 border-gray-300 rounded-full text-blue-600 focus:ring-blue-500"
+            />
+          <label
+            htmlFor='600'
+            className="ml-3 cursor-pointer text-sm text-gray-600"
+            >
+            Mayor a 500
+          </label>
+            </div>
+        </div>
+
+        {/* <RangeSlider onChange={sliderFunc} style={{width: '80%'}} range marks={marks} min={priceRange[0]} max={priceRange[1]} step='50' 
         pushable
         draggableTrack  defaultValue={[300,500]} 
         tipFormatter={percentFormatter}
-        />
+        /> */}
         <div>
 
         </div>

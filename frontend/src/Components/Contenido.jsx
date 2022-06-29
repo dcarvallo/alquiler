@@ -14,15 +14,14 @@ const Contenido = () => {
     const [vehiculos,setVehiculos]=useState([])
     const [filVehiculos, setFilVehiculos] = useState([])
     const [buscar, setBuscar] = useState("");
-    const [filtro, setFiltro] = useState({buscar: "", categoria: 'Medium'});
-    const [searchResults, setSearchResults] = useState([]);
+    const [filtro, setFiltro] = useState({buscar: "", categoria: 'Medium',rangePrice: 1});
+    const [pages,setPages] = useState(null)
     const [totalCount,setTotalCount] = useState(0);
     const [pageNumber,setPageNumber] = useState(1);
     const [pageSize,setPageSize] = useState(9);
     const [showModal, setShowModal] = useState(false);
     const [showId,setShowId] = useState('')
     const [loading, setLoading] = useState(false)
-    const [loadingImage, setLoadingImage] = useState({id: false })
 
 
     const handleChange = event => {
@@ -51,7 +50,8 @@ const Contenido = () => {
         params:{
           filter: { 
             'buscar': filtro.buscar,
-            'category': filtro.categoria
+            'category': filtro.categoria,
+            'rangePrice': filtro.rangePrice
           },
           page: pageNumber, 
           perPage: pageSize,
@@ -59,6 +59,8 @@ const Contenido = () => {
         }
       })
       .then((res)=>{
+        console.log(res.data)
+        setPages(res.data.pages)
         setTotalCount(res.data.total)
         setFilVehiculos(res.data.docs)
         setVehiculos(res.data.docs)
@@ -106,7 +108,7 @@ const Contenido = () => {
       <div className=' grid grid-cols-1 sm:grid-cols-12 justify-center container mx-auto gap-2'>
         <div className="justify-center sm:col-start-1 sm:col-end-3 text-center border rounded border-stone-400 mb-8 pb-6" >
           {/* { loading ? <p>...</p> :  */}
-          <SideBar setFilVehiculos={setFilVehiculos} vehiculos={vehiculos} filVehiculos={filVehiculos} filtro={filtro} setFiltro={setFiltro} /> 
+          <SideBar setFilVehiculos={setFilVehiculos}  pages={pages}  vehiculos={vehiculos} filVehiculos={filVehiculos} filtro={filtro} setFiltro={setFiltro} /> 
           {/* } */}
         </div>
       
@@ -116,19 +118,23 @@ const Contenido = () => {
             <div key={vehiculo._id} className="tarjeta pt-2 relative shadow-slate-300 shadow-xl rounded-2xl border-t-4 border-t-orange-400">
               
               <div className='grid grid-cols-2 px-1 gap-1'>
+                <div>
+
                 <ReactImageAppear 
                   src={vehiculo.img_url}
                   animation="blurInRight"
                   animationDuration="1.2s"
                   alt="Car image"
                   
-              />
-                <div className='md:text-left sm:basis-2/5 text-center'>
+                  />
                   <div className='text-center'>
-                    <span className='text-xs text-gray-400 text-center'>Marca</span> 
-                    <hr />
-                  <p>{vehiculo.make}</p>
+                    {/* <span className='text-xs text-gray-400 text-center'>Marca</span> 
+                    <hr /> */}
+                  <p className='font-bold'>{vehiculo.make}</p>
                   </div>
+                  </div>
+                <div className='md:text-left sm:basis-2/5 text-center'>
+                  
                   <div className='text-center'>
                     <span className='text-xs text-gray-400 text-center'>Modelo</span> 
                     <hr />

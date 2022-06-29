@@ -11,13 +11,23 @@ async function listall(req, res) {
     }
     let autos
     let temp = JSON.parse(filter)
+    console.log(temp)
+    const ranges = [ [200,300], [300,500], [550,600] ]
+    console.log(ranges[temp.rangePrice])
+
+
     if(temp.buscar === ""){
-        
-        autos = await Auto.paginate({ category: temp.category }, options)    
+        autos = await Auto.paginate({ category: temp.category,rentPrice:{ $gte: ranges[temp.rangePrice][0],$lte: ranges[temp.rangePrice][1] } }, options)    
     }
+    // if(temp.rentPrice !== undefined){ 
+    //     autos = await Auto.paginate({ category: temp.category, rentPrice:{ $gte: temp.rentPrice[0] }, rentPrice: { $lte: temp.rentPrice[1]} }, options)
+    //     console.log(temp.rentPrice)
+    // }
     else
-      autos = await Auto.paginate({make: { $regex: new RegExp(temp.buscar, 'i') }, category: temp.category}, options)
+      autos = await Auto.paginate({make: { $regex: new RegExp(temp.buscar, 'i') }, category: temp.category, rentPrice:{ $gte: ranges[temp.rangePrice][0], $lte: ranges[temp.rangePrice][1] } }, options)
     
+
+    //   console.log(autos)
     return res.json(autos)
 }
 
